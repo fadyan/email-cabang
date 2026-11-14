@@ -1,0 +1,593 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Generator</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #090d18;
+    color: #fff;
+    min-height: 100vh;
+    padding: 35px 15px;
+}
+
+.container {
+    max-width: 850px;
+    margin: auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.logo {
+    width: 65px;
+    height: 65px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #7657ff, #18b8e8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+    font-size: 30px;
+    box-shadow: 0 8px 35px #7657ff55;
+}
+
+.header h1 {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.header h1 span {
+    color: #987aff;
+}
+
+.header p {
+    color: #8993aa;
+    font-size: 14px;
+}
+
+.card {
+    background: #121929;
+    border: 1px solid #26334c;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 15px 50px #0003;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 22px;
+}
+
+.field {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    color: #c1c9da;
+    margin-bottom: 9px;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 11px;
+    border: 1px solid #34415c;
+    background: #0b1221;
+    color: white;
+    outline: none;
+    font-size: 14px;
+    transition: .2s;
+}
+
+input:focus {
+    border-color: #9275ff;
+    box-shadow: 0 0 0 3px #9275ff20;
+}
+
+input::placeholder {
+    color: #66738c;
+}
+
+.hint {
+    color: #71809a;
+    font-size: 11px;
+    margin-top: 8px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: .2s;
+}
+
+.generate-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 11px;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    background: linear-gradient(100deg, #7657ff, #397cf6);
+    box-shadow: 0 6px 20px #7657ff35;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.12);
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    background: #121929;
+    border: 1px solid #26334c;
+    border-radius: 14px;
+    padding: 18px 10px;
+    text-align: center;
+}
+
+.stat strong {
+    display: block;
+    color: #a58aff;
+    font-size: 22px;
+    margin-bottom: 7px;
+}
+
+.stat span {
+    color: #8591a8;
+    font-size: 11px;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.results-header h2 {
+    font-size: 17px;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.small-btn {
+    padding: 10px 13px;
+    background: #202d43;
+    color: #dbe3f4;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.small-btn:hover {
+    background: #344565;
+}
+
+.result-list {
+    max-height: 430px;
+    overflow-y: auto;
+}
+
+.result-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 13px 14px;
+    background: #0c1423;
+    border: 1px solid #202d43;
+    border-radius: 10px;
+    margin-bottom: 9px;
+}
+
+.email-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.number {
+    color: #8795ae;
+    font-size: 12px;
+    min-width: 25px;
+}
+
+.email {
+    font-size: 13px;
+    word-break: break-all;
+    color: #e1e8f5;
+}
+
+.copy-btn {
+    background: #253451;
+    color: #bbaaff;
+    padding: 8px 11px;
+    border-radius: 7px;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.copy-btn:hover {
+    background: #7657ff;
+    color: white;
+}
+
+.empty {
+    text-align: center;
+    padding: 45px 10px;
+    color: #74819a;
+    font-size: 13px;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 11px;
+    color: #65728a;
+}
+
+.toast {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #1c2940;
+    color: white;
+    padding: 13px 22px;
+    border-radius: 10px;
+    font-size: 13px;
+    opacity: 0;
+    transition: .3s;
+    z-index: 10;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+@media(max-width: 550px) {
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .stats {
+        gap: 7px;
+    }
+
+    .stat strong {
+        font-size: 19px;
+    }
+
+    .results-header {
+        align-items: flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="logo">✉</div>
+        <h1>Email <span>Generator</span></h1>
+        <p>Generate variasi alamat email anda secara otomatis.</p>
+    </div>
+
+    <div class="card">
+
+        <div class="section-title">⚙ Pengaturan Generator</div>
+
+        <div class="field">
+            <label>Alamat Email Utama</label>
+            <input
+                type="email"
+                id="emailInput"
+                placeholder="Contoh: sukigomes@gmail.com"
+            >
+            <div class="hint">
+                Masukkan alamat email Gmail yang ingin dibuat variasinya.
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Jumlah Variasi Email</label>
+            <input
+                type="number"
+                id="quantityInput"
+                placeholder="Contoh: 100"
+                min="1"
+                max="100000"
+                value="10"
+            >
+            <div class="hint">
+                Maksimal 100.000 email dalam satu kali proses.
+            </div>
+        </div>
+
+        <button class="generate-btn" onclick="generateEmails()">
+            ✨ Generate Email Sekarang
+        </button>
+
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <strong id="totalStat">0</strong>
+            <span>Total Dibuat</span>
+        </div>
+        <div class="stat">
+            <strong id="positionStat">0</strong>
+            <span>Jumlah Karakter</span>
+        </div>
+        <div class="stat">
+            <strong id="remainingStat">0</strong>
+            <span>Sisa Variasi</span>
+        </div>
+    </div>
+
+    <div class="card">
+
+        <div class="results-header">
+            <h2>📋 Hasil Generator</h2>
+
+            <div class="actions">
+                <button class="small-btn" onclick="copyAll()">
+                    Copy All
+                </button>
+                <button class="small-btn" onclick="downloadAll()">
+                    Download
+                </button>
+            </div>
+        </div>
+
+        <div class="result-list" id="resultList">
+            <div class="empty">
+                Belum ada email yang dibuat.<br><br>
+                Masukkan email dan klik Generate.
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        EMAIL GENERATOR • Created By SUKI STORE
+    </div>
+
+</div>
+
+<div class="toast" id="toast">Berhasil!</div>
+
+<script>
+
+let generatedEmails = [];
+
+function generateEmails() {
+
+    const email = document.getElementById("emailInput").value.trim();
+    const quantity = Number(document.getElementById("quantityInput").value);
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
+
+    if (!emailPattern.test(email)) {
+        showToast("Masukkan alamat Gmail yang valid!");
+        return;
+    }
+
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 100000) {
+        showToast("Jumlah harus antara 1 sampai 100.000!");
+        return;
+    }
+
+    // Memisahkan nama dan domain
+    let [username, domain] = email.split("@");
+
+    // Menghapus titik yang sudah ada
+    username = username.replace(/\./g, "");
+
+    if (username.length < 2) {
+        showToast("Nama email minimal 2 karakter!");
+        return;
+    }
+
+    // Total kemungkinan variasi titik
+    const totalPossible = Math.pow(2, username.length - 1) - 1;
+
+    if (quantity > totalPossible) {
+        showToast("Maksimal variasi: " + totalPossible);
+        return;
+    }
+
+    generatedEmails = [];
+
+    // Membuat kombinasi berdasarkan jumlah titik
+    function combinations(length, count, start = 1, current = []) {
+
+        if (current.length === count) {
+            let result = "";
+            let dotPositions = current;
+
+            for (let i = 0; i < length; i++) {
+                result += username[i];
+
+                if (dotPositions.includes(i + 1)) {
+                    result += ".";
+                }
+            }
+
+            generatedEmails.push(result + "@" + domain);
+            return;
+        }
+
+        for (let i = start; i <= length - 1; i++) {
+            combinations(
+                length,
+                count,
+                i + 1,
+                [...current, i]
+            );
+
+            if (generatedEmails.length >= quantity) return;
+        }
+    }
+
+    // Mulai dari satu titik, kemudian dua, tiga, dan seterusnya
+    for (let dots = 1; dots < username.length; dots++) {
+
+        combinations(username.length, dots);
+
+        if (generatedEmails.length >= quantity) break;
+    }
+
+    renderResults();
+
+    document.getElementById("totalStat").textContent =
+        generatedEmails.length.toLocaleString("id-ID");
+
+    document.getElementById("positionStat").textContent =
+        username.length;
+
+    document.getElementById("remainingStat").textContent =
+        (totalPossible - generatedEmails.length).toLocaleString("id-ID");
+
+    showToast("Berhasil membuat " + generatedEmails.length + " email!");
+}
+
+function renderResults() {
+
+    const list = document.getElementById("resultList");
+
+    list.innerHTML = "";
+
+    generatedEmails.forEach((email, index) => {
+
+        const item = document.createElement("div");
+        item.className = "result-item";
+
+        const info = document.createElement("div");
+        info.className = "email-info";
+
+        const number = document.createElement("span");
+        number.className = "number";
+        number.textContent = String(index + 1).padStart(2, "0");
+
+        const address = document.createElement("span");
+        address.className = "email";
+        address.textContent = email;
+
+        const copy = document.createElement("button");
+        copy.className = "copy-btn";
+        copy.textContent = "Salin";
+
+        copy.onclick = () => copyText(email);
+
+        info.append(number, address);
+        item.append(info, copy);
+
+        list.appendChild(item);
+
+    });
+}
+
+async function copyText(text) {
+
+    try {
+        await navigator.clipboard.writeText(text);
+        showToast("Email berhasil disalin!");
+    } catch (error) {
+        showToast("Gagal menyalin email!");
+    }
+}
+
+async function copyAll() {
+
+    if (generatedEmails.length === 0) {
+        showToast("Belum ada hasil untuk disalin!");
+        return;
+    }
+
+    await copyText(generatedEmails.join("\n"));
+}
+
+function downloadAll() {
+
+    if (generatedEmails.length === 0) {
+        showToast("Belum ada hasil untuk di-download!");
+        return;
+    }
+
+    const content = generatedEmails.join("\n");
+
+    const blob = new Blob([content], {
+        type: "text/plain;charset=utf-8"
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "hasil-email-generator.txt";
+
+    link.click();
+
+    URL.revokeObjectURL(url);
+
+    showToast("File berhasil di-download!");
+}
+
+function showToast(message) {
+
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2500);
+}
+
+</script>
+
+</body>
+</html>
